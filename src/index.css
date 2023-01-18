@@ -5,3 +5,14 @@
   list-style: none;
 }
 
+.cart__icon {
+  font-size: 20px;
+}
+
+.navbar__list {
+  margin-top: 10px;
+  font-weight: 700;
+  
+}
+
+ 
