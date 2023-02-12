@@ -1,12 +1,17 @@
+import { memo } from 'react';
 import React from 'react';
 import Item from './Item';
+import '../App.css';
 
 const ItemList = ({ products }) => {
     return (
-        <div className=''>
+        <container className='d-flex fondo-items'>
+            <div className='row'>
+                
             {products.map(prod => <Item className='' key={prod.id} {...prod} />)}
-        </div>
+            </div>
+        </container>
     )
 }
 
-export default ItemList
+export default memo(ItemList)

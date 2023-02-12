@@ -1,38 +1,46 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getProducts, getProductsByCategory } from '../asyncMock';
+import { useAsync } from '../hooks/useAsync'
+import { useTitle } from '../hooks/useTitle'
 import ItemList from './ItemList';
+import { getDocs, collection, query, where } from 'firebase/firestore';
+import { getProducts } from '../services/firebase/firestore/products'
+import '../App.css';
 
 const ItemListContainer = ({ greeting }) => {
-    const [products, setProducts] = useState([])
-    const [error, setError] = useState(false)
-    const [loading, setLoading] = useState(false)
+    useTitle('Todos los bichitos', [])
+
     const { categoryId } = useParams()
 
-    useEffect(() => {
-        setLoading(true)
+    const getProductsWithCategory = () => getProducts(categoryId)
 
-        const asyncFunction = categoryId ? getProductsByCategory : getProducts
-
-        asyncFunction(categoryId).then(response => {
-            setProducts(response)
-        }).catch(error => {
-            console.log(error)
-        }).finally(() => {
-            setLoading(false)
-        })
-    }, [categoryId])
+    const { data: products, error, loading } = useAsync(getProductsWithCategory, [categoryId])
 
 
-    if (loading) {
-        return <h1>Cargando productos...</h1>
+    if(loading) {
+        return <div className='fondo-body-check p-5'>
+        <div className='fondo-items-check p-5'>
+        <h1 className='d-flex justify-content-center'>Cargando...</h1>
+        </div>
+    </div>
+        
+    }
+
+    if(error) {
+        return <div className='fondo-body-check p-5'>
+        <div className='fondo-items-check p-5'>
+        <h1 className='d-flex justify-content-center'>Hubo un error al cargar la pagina
+        </h1>
+        </div>
+    </div>
     }
 
 
 
+
     return (
-        <div className=''>
+        <div className='d-flex justify-content-center fondo-body'>
             <div className=''>
                 <h1 className=''>{greeting}</h1>
                 <ItemList products={products} className='' />
